@@ -79,7 +79,7 @@ int loadMap(Map *map, const char *const filename)
                 case 'o':
                     map->exit = i;
 //                    setTileAsPath(&map->tileMap[i]);
-                    setTileAsEntry(getTileFromMap(map->tileMap, i));
+                    setTileAsExit(getTileFromMap(map->tileMap, i));
                     i++;
                     break;
                 case 'p':
