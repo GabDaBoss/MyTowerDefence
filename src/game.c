@@ -122,6 +122,9 @@ int gameLoop(Game *game)
 
         drawMenu(game->menuRenderer, game->graphic, game->menu);
 
+        setRenderingColor(game->graphic, 0xffffffff);
+        fillCircle(game->graphic, (Rect){0,0,100, 0});
+
         renderPresent(game->graphic);
     }
 

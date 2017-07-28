@@ -6,6 +6,7 @@
 #define MYTOWERDEFENCE_GRAPHIC_H
 
 #include <SDL_ttf.h>
+#include <SDL2_gfxPrimitives.h>
 
 #define Rect struct SDL_Rect
 typedef struct Graphic Graphic;
@@ -40,5 +41,6 @@ void fillRect(Graphic *graphic, Rect rect);
 
 void renderPresent(Graphic *graphic);
 
+void fillCircle(Graphic *graphic, Rect rect);
 
 #endif //MYTOWERDEFENCE_GRAPHIC_H

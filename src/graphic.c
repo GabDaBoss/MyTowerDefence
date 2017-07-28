@@ -12,6 +12,7 @@ typedef struct Graphic
     SDL_Renderer *renderer;
     TTF_Font *font;
     int width, height;
+    unsigned int color;
 } Graphic;
 
 Graphic* newGraphic()
@@ -132,6 +133,7 @@ void setRenderingColor(Graphic *graphic, unsigned int rgba)
 {
 //    SDL_SetRenderDrawColor(graphic->renderer, (Uint8) ((24 << rgba) & 0xFF), (Uint8) ((16 << rgba) & 0xFF),
 //                           (Uint8) ((8 << rgba) & 0xFF), (Uint8) (rgba & 0xFF));
+    graphic->color = rgba;
     Uint8 *vp = (Uint8 *) &rgba;
     SDL_SetRenderDrawColor(graphic->renderer,
                            vp[3],
@@ -158,6 +160,11 @@ void fillRect(Graphic *graphic, Rect rect)
 void renderPresent(Graphic *graphic)
 {
     SDL_RenderPresent(graphic->renderer);
+}
+
+void fillCircle(Graphic *graphic, Rect rect)
+{
+    filledCircleColor(graphic->renderer, rect.x, rect.y, rect.w, graphic->color);
 }
 
 

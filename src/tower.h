@@ -6,4 +6,8 @@
 #define MYTOWERDEFENCE_TOWER_H
 
 typedef struct Tower Tower;
+Tower *newTowers(unsigned int num);
+Tower *newTower();
+unsigned int getTowerSizeof();
+void deleteTower(Tower *tower);
 #endif //MYTOWERDEFENCE_TOWER_H
