@@ -6,46 +6,71 @@
 
 #include "util.h"
 #include "mapRenderer.h"
+#include "menuRenderer.h"
 
 #define MENU_WIDTH 200
 static const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 static const char *const MAP_FILE = "map.csv";
 
+typedef struct Game
+{
+    Graphic *graphic;
+    GameState *state;
+    Map *map;
+    Menu *menu;
+    MapRenderer *mapRenderer;
+    MenuRenderer *menuRenderer;
+} Game;
+
+int initGame(Game *game)
+{
+    game->graphic = newGraphic();
+    game->state = newGameState();
+    game->map = newMap();
+    game->menu = newMenu();
+    game->mapRenderer = newMapRenderer();
+    game->menuRenderer = newMenuRenderer();
+
+    initMenu(game->menu, "TowerDefense");
+    initMenuRenderer(game->menuRenderer, MENU_WIDTH, WINDOW_HEIGHT);
+
+
+    return initGraphic(game->graphic, WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+
+void deleteGame(Game *game)
+{
+
+    deleteGraphic(game->graphic);
+    deleteGameState(game->state);
+    deleteMap(game->map);
+    deleteMapRenderer(game->mapRenderer);
+    deleteMenuRenderer(game->menuRenderer);
+    deleteMenu(game->menu);
+}
+
 
 int game()
 {
-    Graphic *graphic = newGraphic();
-    GameState *state = newGameState();
-    MapRenderer *mapRenderer = newMapRenderer();
-    Map *map = newMap();
-    if (initGraphic(graphic, WINDOW_WIDTH, WINDOW_HEIGHT))
+    Game game;
+
+    if (initGame(&game))
     {
         // Now that we went through the initialization of SDL everything should be good and dandy.
-        if (loadMap(map, MAP_FILE))
+        if (loadMap(game.map, MAP_FILE))
         {
-            if (gameLoop(map, graphic, state, mapRenderer))
+            if (gameLoop(&game))
             {
 
             }
         }
     }
 
-    deleteGraphic(graphic);
-    deleteGameState(state);
-    deleteMap(map);
-    deleteMapRenderer(mapRenderer);
-
     return 0;
 }
 
-void drawMenu(Graphic *graphic)
-{
-    setRenderingColor(graphic, 0x000000FF);
-    fillRect(graphic, (Rect) {getGraphicWidth(graphic) - MENU_WIDTH, 0, MENU_WIDTH, getGraphicHeight(graphic)});
-    drawText(graphic, "Tower Defense", (Rect) {getGraphicWidth(graphic) - MENU_WIDTH, 0, MENU_WIDTH, 14});
-}
 
-int gameLoop(Map *map, Graphic *graphic, GameState *state, MapRenderer *mapRenderer)
+int gameLoop(Game *game)
 {
 
     unsigned int lastTime, currentTime, deltaTime;
@@ -56,12 +81,12 @@ int gameLoop(Map *map, Graphic *graphic, GameState *state, MapRenderer *mapRende
     SDL_Event event;
     while (!quit)
     {
-        calcGraphicSize(graphic);
-        setMapRendererHeight(mapRenderer, getGraphicHeight(graphic));
-        setMapRendererWidth(mapRenderer, getGraphicWidth(graphic));
-        calcTileSize(mapRenderer, map);
-        setMapRendererWidth(mapRenderer, getGraphicWidth(graphic) - MENU_WIDTH);
-        setMapRendererHeight(mapRenderer, getGraphicHeight(graphic));
+        calcGraphicSize(game->graphic);
+        setMapRendererHeight(game->mapRenderer, getGraphicHeight(game->graphic));
+        setMapRendererWidth(game->mapRenderer, getGraphicWidth(game->graphic));
+        calcTileSize(game->mapRenderer, game->map);
+        setMapRendererWidth(game->mapRenderer, getGraphicWidth(game->graphic) - MENU_WIDTH);
+        setMapRendererHeight(game->mapRenderer, getGraphicHeight(game->graphic));
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
@@ -82,20 +107,22 @@ int gameLoop(Map *map, Graphic *graphic, GameState *state, MapRenderer *mapRende
         {
             lastTime = SDL_GetTicks();
 
-            handlePlayFieldScrolling(mapRenderer,map, graphic, cursorX, cursorY, deltaTime);
+            handlePlayFieldScrolling(game->mapRenderer, game->map, game->graphic, cursorX, cursorY, deltaTime);
         }
 
 
-        setRenderingColor(graphic, 0xFFFFFFFF);
+        setRenderingColor(game->graphic, 0xFFFFFFFF);
 
-        clear(graphic);
-        drawMap(mapRenderer,graphic, map);
+        clear(game->graphic);
+        drawMap(game->mapRenderer, game->graphic, game->map);
 
-        handleSelector(mapRenderer, map, graphic, cursorX, cursorY);
+        handleSelector(game->mapRenderer, game->map, game->graphic, cursorX, cursorY);
 
-        drawMenu(graphic);
+        setMenuTileInfo(game->menu, getTileTypeAsText(getTile(game->map, getTileIndexUnderPoint(game->mapRenderer, game->map, cursorX, cursorY))));
 
-        renderPresent(graphic);
+        drawMenu(game->menuRenderer, game->graphic, game->menu);
+
+        renderPresent(game->graphic);
     }
 
 

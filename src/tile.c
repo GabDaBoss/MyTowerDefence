@@ -40,6 +40,30 @@ tileType getTileType(Tile *tile)
     return tile->type;
 }
 
+char * const getTileTypeAsText(Tile *tile)
+{
+    char * result;
+    switch (getTileType(tile))
+    {
+        case WALL:
+            result = "Wall";
+            break;
+        case PATH:
+            result = "Path";
+            break;
+        case ENTRY:
+            result = "Entry";
+            break;
+        case EXIT:
+            result = "Exit";
+            break;
+        default:
+            result = "Undefined";
+            break;
+    }
+    return  result;
+}
+
 void setTileType(Tile *tile, tileType type)
 {
     tile->type = type;
@@ -65,7 +89,7 @@ void setTileAsExit(Tile *tile)
     setTileType(tile, EXIT);
 }
 
-Tile * getTileFromMap(Tile* tiles, int pos)
+Tile * getTileFromArray(Tile *tiles, int pos)
 {
     return &tiles[pos];
 }

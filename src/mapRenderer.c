@@ -22,6 +22,12 @@ typedef struct MapRenderer
     int height;
 } MapRenderer;
 
+int getTileIndexUnderPoint(MapRenderer *renderer, Map *map, int x, int y)
+{
+    return (((y + renderer->viewPosY) / (renderer->tileSize)) * getMapWidth(map)) +
+            ((x + renderer->viewPosX) / (renderer->tileSize));
+}
+
 MapRenderer *newMapRenderer()
 {
     MapRenderer *renderer = calloc(1, sizeof(MapRenderer));
@@ -153,10 +159,11 @@ void handleSelector(MapRenderer *renderer, Map *map, Graphic *graphic, int curso
 //    int cursorTileRow = (int) ((cursorY + map->viewPosY) / (map->tileSize * graphic->zoom));
 //    int cursorTileCol = (int) ((cursorX + map->viewPosX) / (map->tileSize * graphic->zoom));
 //    int cursorTile = cursorTileRow * map->width + cursorTileCol;
-    int cursorTile = (int) (((int) ((cursorY + renderer->viewPosY) / (renderer->tileSize)) * getMapWidth(map)) +
-                            ((cursorX + renderer->viewPosX) / (renderer->tileSize)));
-    drawRect(graphic, (SDL_Rect) {(int) ((cursorTile % renderer->width) * renderer->tileSize ) - renderer->viewPosX,
-                                  (int) ((cursorTile / renderer->width) * renderer->tileSize ) - renderer->viewPosY,
+
+    int cursorTile = getTileIndexUnderPoint(renderer, map, cursorX, cursorY);
+    
+    drawRect(graphic, (SDL_Rect) {(int) ((cursorTile % renderer->width) * renderer->tileSize) - renderer->viewPosX,
+                                  (int) ((cursorTile / renderer->width) * renderer->tileSize) - renderer->viewPosY,
                                   (int) (renderer->tileSize), (int) (renderer->tileSize)});
 }
 

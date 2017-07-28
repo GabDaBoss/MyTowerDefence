@@ -10,11 +10,12 @@
 #include "gamestate.h"
 #include "mapRenderer.h"
 
+typedef struct Game Game;
 
 int game();
 
 int loadMap(Map *map, const char *const filename);
 
-int gameLoop(Map *map, Graphic *graphic, GameState *state, MapRenderer *mapRenderer);
+int gameLoop(Game *game);
 
 #endif //MYTOWERDEFENCE_GAME_H

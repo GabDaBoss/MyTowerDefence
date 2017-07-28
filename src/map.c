@@ -73,23 +73,23 @@ int loadMap(Map *map, const char *const filename)
                 case 'i':
                     map->entry = i;
 //                    setTileAsPath(&(map->tileMap[i]));
-                    setTileAsEntry(getTileFromMap(map->tileMap, i));
+                    setTileAsEntry(getTile(map, i));
                     i++;
                     break;
                 case 'o':
                     map->exit = i;
 //                    setTileAsPath(&map->tileMap[i]);
-                    setTileAsExit(getTileFromMap(map->tileMap, i));
+                    setTileAsExit(getTile(map, i));
                     i++;
                     break;
                 case 'p':
 //                    setTileAsPath(&map->tileMap[i]);
-                    setTileAsPath(getTileFromMap(map->tileMap, i));
+                    setTileAsPath(getTile(map, i));
                     i++;
                     break;
                 case 'w':
 //                    setTileAsWall(&map->tileMap[i]);
-                    setTileAsWall(getTileFromMap(map->tileMap, i));
+                    setTileAsWall(getTile(map, i));
                     i++;
                     break;
                 default:break;
@@ -130,6 +130,6 @@ int getMapSize(Map *map)
 }
 Tile* getTile(Map* map, int i)
 {
-//    return map->tileMap[i];
-    return getTileFromMap(map->tileMap, i);
+//    return &map->tileMap[i];
+    return getTileFromArray(map->tileMap, i);
 }

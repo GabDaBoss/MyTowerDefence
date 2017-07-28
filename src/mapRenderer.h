@@ -43,4 +43,6 @@ handlePlayFieldScrolling(MapRenderer *renderer, Map *map, Graphic *graphic, int 
 
 void handleSelector(MapRenderer *renderer, Map *map, Graphic *graphic, int cursorX, int cursorY);
 
+int getTileIndexUnderPoint(MapRenderer *renderer, Map *map, int x, int y);
+
 #endif //MYTOWERDEFENCE_MAPRENDERER_H
