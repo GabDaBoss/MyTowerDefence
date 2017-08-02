@@ -42,6 +42,9 @@ tileType getTileType(Tile *tile)
 
 char * const getTileTypeAsText(Tile *tile)
 {
+    if(!tile)
+        return NULL;
+
     char * result;
     switch (getTileType(tile))
     {

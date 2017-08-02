@@ -162,8 +162,8 @@ void handleSelector(MapRenderer *renderer, Map *map, Graphic *graphic, int curso
 
     int cursorTile = getTileIndexUnderPoint(renderer, map, cursorX, cursorY);
     
-    drawRect(graphic, (SDL_Rect) {(int) ((cursorTile % renderer->width) * renderer->tileSize) - renderer->viewPosX,
-                                  (int) ((cursorTile / renderer->width) * renderer->tileSize) - renderer->viewPosY,
+    drawRect(graphic, (SDL_Rect) {(int) ((cursorTile % getMapWidth(map)) * renderer->tileSize) - renderer->viewPosX,
+                                  (int) ((cursorTile / getMapWidth(map)) * renderer->tileSize) - renderer->viewPosY,
                                   (int) (renderer->tileSize), (int) (renderer->tileSize)});
 }
 

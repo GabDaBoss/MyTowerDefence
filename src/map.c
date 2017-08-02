@@ -5,17 +5,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "map.h"
-#include "tile.h"
-#include "creep.h"
-#include "tower.h"
+#include "vector.h"
 
 typedef struct Map
 {
-    Tile *tileArray;
-    Creep *creepArray;
-    Tower *towerArray;
-    int size, width, numPaths, numWalls, entry, exit, tileSize, viewPosX, viewPosY;
-    double zoom;
+    Vector *tileVec;
+    int width;
 } Map;
 
 Map *newMap()
@@ -31,6 +26,8 @@ int loadMap(Map *map, const char *const filename)
     if (file)
     {
         char c;
+        map->tileVec = vectorNewDefault(sizeof(void *));
+        Tile *tile;
 
         // First Read just to get the map size, and other data.
         while ((c = (char) getc(file)) != EOF)
@@ -38,64 +35,41 @@ int loadMap(Map *map, const char *const filename)
             switch (c)
             {
                 case 'i':
-                    (map->numPaths)++;
-                    map->size++;
+//                    map->numPaths++;
+                    tile = newTile();
+                    setTileAsEntry(tile);
+                    vectorAddItem(map->tileVec, (unsigned char *) tile);
+//                    map->size++;
                     break;
                 case 'o':
-                    (map->numPaths)++;
-                    map->size++;
+//                    (map->numPaths)++;
+                    tile = newTile();
+                    setTileAsExit(tile);
+                    vectorAddItem(map->tileVec, (unsigned char *) tile);
+//                    map->size++;
                     break;
                 case 'p':
-                    (map->numPaths)++;
-                    map->size++;
+//                    (map->numPaths)++;
+                    tile = newTile();
+                    setTileAsPath(tile);
+                    vectorAddItem(map->tileVec, (unsigned char *) tile);
+//                    map->size++;
                     break;
                 case 'w':
-                    (map->numWalls)++;
-                    map->size++;
+//                    (map->numWalls)++;
+//                    map->size++;
+                    tile = newTile();
+                    setTileAsWall(tile);
+                    vectorAddItem(map->tileVec, (unsigned char *) tile);
                     break;
                 case '\n':
                     if (!map->width)
-                        map->width = map->size;
+                        map->width = vectorTotal(map->tileVec);
                 default:
                     break;
             }
         }
 
-        // create the map tiles.
-        map->tileArray = newTiles(map->size);
-
-        // Second read to load the data of the tiles;
-        rewind(file);
-        while ((c = (char) getc(file)) != EOF)
-        {
-            switch (c)
-            {
-                case 'i':
-                    map->entry = i;
-//                    setTileAsPath(&(map->tileArray[i]));
-                    setTileAsEntry(getTile(map, i));
-                    i++;
-                    break;
-                case 'o':
-                    map->exit = i;
-//                    setTileAsPath(&map->tileArray[i]);
-                    setTileAsExit(getTile(map, i));
-                    i++;
-                    break;
-                case 'p':
-//                    setTileAsPath(&map->tileArray[i]);
-                    setTileAsPath(getTile(map, i));
-                    i++;
-                    break;
-                case 'w':
-//                    setTileAsWall(&map->tileArray[i]);
-                    setTileAsWall(getTile(map, i));
-                    i++;
-                    break;
-                default:
-                    break;
-            }
-        }
         fclose(file);
     } else
     {
@@ -107,9 +81,11 @@ int loadMap(Map *map, const char *const filename)
 
 void deleteMap(Map *map)
 {
-    deleteTile(map->tileArray);
-    deleteTower(map->towerArray);
-    deleteCreep(map->creepArray);
+    for (int i = vectorTotal(map->tileVec); i-- > 0;)
+    {
+        free(vectorGetItem(map->tileVec, i));
+    }
+    vectorDelete(map->tileVec);
     free(map);
     map = NULL;
 }
@@ -127,16 +103,19 @@ int getMapWidth(Map *map)
 
 int getMapHeight(Map *map)
 {
-    return map->size / map->width;
+    return getMapSize(map) / getMapWidth(map);
+//    return map->size / map->width;
 }
 
 int getMapSize(Map *map)
 {
-    return map->size;
+    return vectorTotal(map->tileVec);
+//    return map->size;
 }
 
 Tile *getTile(Map *map, int i)
 {
 //    return &map->tileArray[i];
-    return getTileFromArray(map->tileArray, i);
+    return vectorGetItem(map->tileVec, i);
+//    return getTileFromArray(map->tileArray, i);
 }
