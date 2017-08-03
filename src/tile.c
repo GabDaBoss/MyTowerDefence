@@ -20,7 +20,7 @@ Tile *newTile()
 
 Tile *newTiles(int num)
 {
-    return calloc((size_t) num, getTileSizeof());
+    return calloc((size_t) num, getTileSizeOf());
 }
 
 void deleteTile(Tile *tile)
@@ -30,7 +30,7 @@ void deleteTile(Tile *tile)
 }
 
 
-size_t getTileSizeof()
+size_t getTileSizeOf()
 {
     return sizeof(Tile);
 }

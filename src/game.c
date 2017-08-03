@@ -7,6 +7,9 @@
 #include "util.h"
 #include "mapRenderer.h"
 #include "menuRenderer.h"
+#include "vector.h"
+#include "tower.h"
+#include "creep.h"
 
 #define MENU_WIDTH 200
 static const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
@@ -17,6 +20,8 @@ typedef struct Game
     Graphic *graphic;
     GameState *state;
     Map *map;
+    Vector *towerVec;
+    Vector *creepVec;
     Menu *menu;
     MapRenderer *mapRenderer;
     MenuRenderer *menuRenderer;
@@ -30,6 +35,8 @@ int initGame(Game *game)
     game->menu = newMenu();
     game->mapRenderer = newMapRenderer();
     game->menuRenderer = newMenuRenderer();
+    game->towerVec = vectorNewDefault(getTowerSizeof());
+    game->creepVec = vectorNewDefault(getCreepSizeof());
 
     initMenu(game->menu, "TowerDefense");
     initMenuRenderer(game->menuRenderer, MENU_WIDTH, WINDOW_HEIGHT);
@@ -47,6 +54,8 @@ void deleteGame(Game *game)
     deleteMapRenderer(game->mapRenderer);
     deleteMenuRenderer(game->menuRenderer);
     deleteMenu(game->menu);
+    vectorDelete(game->towerVec);
+    vectorDelete(game->creepVec);
 }
 
 

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "vector.h"
 
 #define VECTOR_INIT_CAPACITY 4
@@ -67,7 +68,45 @@ void vectorAddItem(Vector *vector, unsigned char *item)
         vectorResize(vector, vector->capacity * 2);
     }
 //    vector->items[vector->total*vector->sizeOfItem] = item;
-    memcpy(&vector->items[vector->total++ * vector->sizeOfItem], item, vector->sizeOfItem);
+    memcpy(&vector->items[vector->total * vector->sizeOfItem], item, vector->sizeOfItem);
+    vector->total++;
+}
+
+/**
+ * Take an Array of items and insert it into the data.
+ * @param vector
+ * @param items
+ * @param num
+ */
+void vectorAddItems(Vector *vector, unsigned char *items, int num)
+{
+    if (vector->capacity < vector->total + num)
+    {
+        int power = (vector->total + num ) / vector->capacity;
+        power += power % 2;
+        power = power / 2;
+        int newSize = (int) pow(vector->capacity, power);
+        vectorResize(vector, (unsigned int) newSize);
+    }
+    memcpy(&vector->items[vector->total * vector->sizeOfItem], items, vector->sizeOfItem * num);
+    vector->total += num;
+}
+
+void * vectorGetItems(Vector * vector, int index, int num)
+{
+    if(index + num < vector-> total)
+        return vectorGetItem(vector, index);
+    return NULL;
+}
+void *vectorAddNew(Vector *vector)
+{
+    if (vector->capacity == vector->total)
+    {
+        vectorResize(vector, vector->capacity * 2);
+    }
+    void * res = &vector->items[vector->total * vector->sizeOfItem];
+    vector->total++;
+    return res;
 }
 
 void vectorSetItem(Vector *vector, int index, unsigned char *item)

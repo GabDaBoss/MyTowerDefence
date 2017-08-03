@@ -11,7 +11,7 @@ typedef enum tileType
     WALL, PATH, ENTRY, EXIT
 } tileType;
 
-unsigned long getTileSizeof();
+unsigned long getTileSizeOf();
 
 void deleteTile(Tile *tile);
 

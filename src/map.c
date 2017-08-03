@@ -36,31 +36,35 @@ int loadMap(Map *map, const char *const filename)
             {
                 case 'i':
 //                    map->numPaths++;
-                    tile = newTile();
+//                    tile = newTile();
+                    tile = vectorAddNew(map->tileVec);
                     setTileAsEntry(tile);
-                    vectorAddItem(map->tileVec, (unsigned char *) tile);
+//                    vectorAddItem(map->tileVec, (unsigned char *) tile);
 //                    map->size++;
                     break;
                 case 'o':
 //                    (map->numPaths)++;
-                    tile = newTile();
+//                    tile = newTile();
+                    tile = vectorAddNew(map->tileVec);
                     setTileAsExit(tile);
-                    vectorAddItem(map->tileVec, (unsigned char *) tile);
+//                    vectorAddItem(map->tileVec, (unsigned char *) tile);
 //                    map->size++;
                     break;
                 case 'p':
 //                    (map->numPaths)++;
-                    tile = newTile();
+//                    tile = newTile();
+                    tile = vectorAddNew(map->tileVec);
                     setTileAsPath(tile);
-                    vectorAddItem(map->tileVec, (unsigned char *) tile);
+//                    vectorAddItem(map->tileVec, (unsigned char *) tile);
 //                    map->size++;
                     break;
                 case 'w':
 //                    (map->numWalls)++;
 //                    map->size++;
-                    tile = newTile();
+//                    tile = newTile();
+                    tile = vectorAddNew(map->tileVec);
                     setTileAsWall(tile);
-                    vectorAddItem(map->tileVec, (unsigned char *) tile);
+//                    vectorAddItem(map->tileVec, (unsigned char *) tile);
                     break;
                 case '\n':
                     if (!map->width)
@@ -81,10 +85,10 @@ int loadMap(Map *map, const char *const filename)
 
 void deleteMap(Map *map)
 {
-    for (int i = vectorTotal(map->tileVec); i-- > 0;)
-    {
-        free(vectorGetItem(map->tileVec, i));
-    }
+//    for (int i = vectorTotal(map->tileVec); i-- > 0;)
+//    {
+//        free(vectorGetItem(map->tileVec, i));
+//    }
     vectorDelete(map->tileVec);
     free(map);
     map = NULL;
